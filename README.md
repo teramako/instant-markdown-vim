@@ -7,6 +7,10 @@ instant-markdown.vim
 
 参考: http://youtu.be/SvIrHS24jLc
 
+License
+-------
+ - MIT
+
 [vimperator-plugin-httpdjs]: https://github.com/teramako/vimperator-plugin-httpdjs
 [vim-instant-markdown]: https://github.com/suan/vim-instant-markdown
 
