@@ -20,7 +20,7 @@ function! s:update_markdown()
   if (b:last_number_of_changes == "" || b:last_number_of_changes != b:changedtick)
     let b:last_number_of_changes = b:changedtick
     let current_buffer = join(getbufline("%", 1, "$"), "\n")
-    silent! exec "silent! !echo " . escape(shellescape(current_buffer), '%!#') . " | curl -X POST --data-urlencode 'file@-' " . s:URL . " &>/dev/null &"
+    call system("curl -X POST --data-urlencode 'file@-' ".shellescape(s:URL)." &>/dev/null &", current_buffer)
   endif
 endfunction
 function! instant_markdown#open()
