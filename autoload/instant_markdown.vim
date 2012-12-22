@@ -21,6 +21,8 @@ function! s:update_markdown()
   if (saved_changedtick == "" || saved_changedtick != b:changedtick)
     call s:setbufvar('changedtick', b:changedtick)
     let current_buffer = join(getbufline("%", 1, "$"), "\n")
+    " Empty {input} string for system() causes E677.
+    let current_buffer = current_buffer == '' ? ' ' : current_buffer
     let url = s:BASE_URL . s:find_var('instant_markdown_path', '/markdown')
     call s:setbufvar('posted_url', url)
     call system("curl -X POST --data-urlencode 'file@-' ".shellescape(url)." &>/dev/null &", current_buffer)
