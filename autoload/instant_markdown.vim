@@ -14,14 +14,16 @@ endfunction
 
 let s:host = get(g:, 'instant_markdown_host', 'localhost')
 let s:port = get(g:, 'instant_markdown_port', 8090)
-let s:URL = 'http://'.s:host.':'.s:port.'/markdown'
+let s:BASE_URL = 'http://'.s:host.':'.s:port
 
 function! s:update_markdown()
   let saved_changedtick = s:getbufvar('changedtick', '')
   if (saved_changedtick == "" || saved_changedtick != b:changedtick)
     call s:setbufvar('changedtick', b:changedtick)
     let current_buffer = join(getbufline("%", 1, "$"), "\n")
-    call system("curl -X POST --data-urlencode 'file@-' ".shellescape(s:URL)." &>/dev/null &", current_buffer)
+    let url = s:BASE_URL . s:find_var('instant_markdown_path', '/markdown')
+    call s:setbufvar('posted_url', url)
+    call system("curl -X POST --data-urlencode 'file@-' ".shellescape(url)." &>/dev/null &", current_buffer)
   endif
 endfunction
 function! s:getbufvar(name, else)
@@ -35,6 +37,14 @@ function! s:setbufvar(name, value)
     let b:instant_markdown = {}
   endif
   let b:instant_markdown[a:name] = a:value
+endfunction
+function! s:find_var(varname, else)
+    for ns in [b:, w:, t:, g:]
+        if has_key(ns, a:varname)
+            return ns[a:varname]
+        endif
+    endfor
+    return a:else
 endfunction
 function! instant_markdown#open()
   augroup instant-markdown
@@ -52,7 +62,14 @@ function! instant_markdown#close()
     autocmd!
   augroup END
 
-  silent! exec "silent! !curl -s -X DELETE " . s:URL . " &>/dev/null &"
+  let url = s:getbufvar('posted_url', '')
+  if url ==# ''
+    echohl ErrorMsg
+    echomsg 'instant-markdown: call :InstantMarkdownStart at first.'
+    echohl None
+    return
+  endif
+  silent! exec "silent! !curl -s -X DELETE " . shellescape(url) . " &>/dev/null &"
 endfunction
 
 
