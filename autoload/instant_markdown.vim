@@ -16,7 +16,7 @@ let s:host = get(g:, 'instant_markdown_host', 'localhost')
 let s:port = get(g:, 'instant_markdown_port', 8090)
 let s:BASE_URL = 'http://'.s:host.':'.s:port
 let s:update_on_cursorhold = get(g:, 'instant_markdown_update_on_cursorhold', 1)
-let s:update_on_cursormoved = get(g:, 'instant_markdown_update_on_cursormoved', 1)
+let s:update_on_cursormoved = get(g:, 'instant_markdown_update_on_cursormoved', 0)
 
 function! s:update_markdown()
   let saved_changedtick = s:getbufvar('changedtick', '')
