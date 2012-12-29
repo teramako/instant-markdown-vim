@@ -17,6 +17,7 @@ let s:port = get(g:, 'instant_markdown_port', 8090)
 let s:BASE_URL = 'http://'.s:host.':'.s:port
 let s:update_on_cursorhold = get(g:, 'instant_markdown_update_on_cursorhold', 1)
 let s:update_on_cursormoved = get(g:, 'instant_markdown_update_on_cursormoved', 0)
+let s:updatetime = get(g:, 'instant_markdown_updatetime', 100)
 
 function! s:update_markdown()
   let saved_changedtick = s:getbufvar('changedtick', '')
@@ -61,6 +62,12 @@ function! instant_markdown#open()
     endif
     autocmd BufWinLeave <buffer> silent call instant_markdown#close()
     autocmd BufWinEnter <buffer> silent call instant_markdown#open()
+    if s:updatetime >= 0
+      call s:setbufvar('updatetime', &updatetime)
+      let &updatetime = s:updatetime
+      autocmd BufWinEnter <buffer> let &updatetime = s:updatetime
+      autocmd BufWinLeave <buffer> let &updatetime = s:getbufvar('updatetime', &updatetime)
+    endif
   augroup END
 
   call s:setbufvar('changedtick', '')
