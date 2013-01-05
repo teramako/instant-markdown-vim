@@ -108,6 +108,11 @@ function! instant_markdown#open()
     nmap <buffer> <C-l> <Plug>(instant_markdown_update)
   endif
 
+  " NOTE: If no "User instant-markdown-mapping" events,
+  " Vim complains like "No matching autocommands".
+  autocmd instant-markdown User instant-markdown-mapping :
+  doautocmd User instant-markdown-mapping
+
   call s:setbufvar('changedtick', '')
   call s:update_markdown()
 endfunction
