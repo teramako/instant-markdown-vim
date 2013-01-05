@@ -8,7 +8,7 @@ set cpo&vim
 
 
 function! instant_markdown#load()
-    " dummy function to load this script.
+  " dummy function to load this script.
 endfunction
 
 
@@ -32,29 +32,29 @@ function! s:update_markdown()
     call s:setbufvar('posted_url', url)
     let cmd = "curl -X POST --data-urlencode 'file@-' ".shellescape(url)." &>/dev/null"
     if firstpost
-        " Execute curl command as foreground at first POST.
-        redraw
-        echon 'instant-markdown: checking '''
-        \   . s:host.':'.s:port.''' is alive...'
+      " Execute curl command as foreground at first POST.
+      redraw
+      echon 'instant-markdown: checking '''
+      \   . s:host.':'.s:port.''' is alive...'
     else
-        let cmd .= ' &'
+      let cmd .= ' &'
     endif
     call system(cmd, current_buffer)
     if firstpost
-        redraw
-        echon "\r"
-        if v:shell_error == 0
-            echomsg 'instant-markdown: checking '''
-            \     . s:host.':'.s:port.''' is alive ... done.'
-        else
-            echohl ErrorMsg
-            echomsg 'instant-markdown: checking '''
-            \     . s:host.':'.s:port.''' is alive ... DEAD.'
-            echomsg 'Please check httpd.js is running '
-            \     . 'on your Vimperator.'
-            echohl None
-            sleep 2
-        endif
+      redraw
+      echon "\r"
+      if v:shell_error == 0
+        echomsg 'instant-markdown: checking '''
+        \     . s:host.':'.s:port.''' is alive ... done.'
+      else
+        echohl ErrorMsg
+        echomsg 'instant-markdown: checking '''
+        \     . s:host.':'.s:port.''' is alive ... DEAD.'
+        echomsg 'Please check httpd.js is running '
+        \     . 'on your Vimperator.'
+        echohl None
+        sleep 2
+      endif
     endif
   endif
 endfunction
@@ -71,12 +71,12 @@ function! s:setbufvar(name, value)
   let b:instant_markdown[a:name] = a:value
 endfunction
 function! s:find_var(varname, else)
-    for ns in [b:, w:, t:, g:]
-        if has_key(ns, a:varname)
-            return ns[a:varname]
-        endif
-    endfor
-    return a:else
+  for ns in [b:, w:, t:, g:]
+    if has_key(ns, a:varname)
+      return ns[a:varname]
+    endif
+  endfor
+  return a:else
 endfunction
 function! instant_markdown#open()
   augroup instant-markdown
