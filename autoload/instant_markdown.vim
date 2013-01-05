@@ -22,14 +22,40 @@ let s:updatetime = get(g:, 'instant_markdown_updatetime', 100)
 
 function! s:update_markdown()
   let saved_changedtick = s:getbufvar('changedtick', '')
-  if (saved_changedtick == "" || saved_changedtick != b:changedtick)
+  let firstpost = saved_changedtick == ""
+  if (firstpost || saved_changedtick != b:changedtick)
     call s:setbufvar('changedtick', b:changedtick)
     let current_buffer = join(getbufline("%", 1, "$"), "\n")
     " Empty {input} string for system() causes E677.
     let current_buffer = current_buffer == '' ? ' ' : current_buffer
     let url = s:BASE_URL . s:find_var('instant_markdown_path', '/markdown')
     call s:setbufvar('posted_url', url)
-    call system("curl -X POST --data-urlencode 'file@-' ".shellescape(url)." &>/dev/null &", current_buffer)
+    let cmd = "curl -X POST --data-urlencode 'file@-' ".shellescape(url)." &>/dev/null"
+    if firstpost
+        " Execute curl command as foreground at first POST.
+        redraw
+        echon 'instant-markdown: checking '''
+        \   . s:host.':'.s:port.''' is alive...'
+    else
+        let cmd .= ' &'
+    endif
+    call system(cmd, current_buffer)
+    if firstpost
+        redraw
+        echon "\r"
+        if v:shell_error == 0
+            echomsg 'instant-markdown: checking '''
+            \     . s:host.':'.s:port.''' is alive ... done.'
+        else
+            echohl ErrorMsg
+            echomsg 'instant-markdown: checking '''
+            \     . s:host.':'.s:port.''' is alive ... DEAD.'
+            echomsg 'Please check httpd.js is running '
+            \     . 'on your Vimperator.'
+            echohl None
+            sleep 2
+        endif
+    endif
   endif
 endfunction
 function! s:getbufvar(name, else)
