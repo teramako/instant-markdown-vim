@@ -79,6 +79,7 @@ function! s:find_var(varname, else)
   return a:else
 endfunction
 function! instant_markdown#open()
+  " auto-commands
   augroup instant-markdown
     autocmd!
     if s:update_on_cursorhold
@@ -100,7 +101,12 @@ function! instant_markdown#open()
     endif
   augroup END
 
-  nnoremap <buffer> <C-l> :<C-u>call <SID>update_markdown()<CR><C-l>
+  " mappings
+  nnoremap <buffer> <Plug>(instant_markdown_update)
+  \         :<C-u>call <SID>update_markdown()<CR><C-l>
+  if !get(g:, 'instant_markdown_no_default_keymappings', 0)
+    nmap <buffer> <C-l> <Plug>(instant_markdown_update)
+  endif
 
   call s:setbufvar('changedtick', '')
   call s:update_markdown()
