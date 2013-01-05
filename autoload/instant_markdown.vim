@@ -82,16 +82,16 @@ function! instant_markdown#open()
   augroup instant-markdown
     autocmd!
     if s:update_on_cursorhold
-      autocmd CursorHold,CursorHoldI <buffer> silent call s:update_markdown()
+      autocmd CursorHold,CursorHoldI <buffer> call s:update_markdown()
     endif
     if s:update_on_cursormoved
-      autocmd CursorMoved,CursorMovedI <buffer> silent call s:update_markdown()
+      autocmd CursorMoved,CursorMovedI <buffer> call s:update_markdown()
     endif
     if s:update_on_bufwritepost
-      autocmd BufWritePost <buffer> silent call s:update_markdown()
+      autocmd BufWritePost <buffer> call s:update_markdown()
     endif
-    autocmd BufWinLeave <buffer> silent call instant_markdown#close()
-    autocmd BufWinEnter <buffer> silent call instant_markdown#open()
+    autocmd BufWinLeave <buffer> call instant_markdown#close()
+    autocmd BufWinEnter <buffer> call instant_markdown#open()
     if s:updatetime >= 0
       call s:setbufvar('updatetime', &updatetime)
       let &updatetime = s:updatetime
@@ -100,7 +100,7 @@ function! instant_markdown#open()
     endif
   augroup END
 
-  nnoremap <buffer> <C-l> :<C-u>silent call <SID>update_markdown()<CR><C-l>
+  nnoremap <buffer> <C-l> :<C-u>call <SID>update_markdown()<CR><C-l>
 
   call s:setbufvar('changedtick', '')
   call s:update_markdown()
