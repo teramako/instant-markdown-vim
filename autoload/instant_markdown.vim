@@ -100,6 +100,8 @@ function! instant_markdown#open()
     endif
   augroup END
 
+  nnoremap <buffer> <C-l> :<C-u>silent call <SID>update_markdown()<CR><C-l>
+
   call s:setbufvar('changedtick', '')
   call s:update_markdown()
 endfunction
