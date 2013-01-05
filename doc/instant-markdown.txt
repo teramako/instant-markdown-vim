@@ -1,0 +1,133 @@
+*instant-markdown.txt* *instant-markdown* *instantmarkdown* vim-plugin for vimperator-plugin-httpdjs
+
+Author:
+  teramako <teramako@gmail.com>
+  tyru <tyru.exe@gmail.com>
+Version: x.y.z
+License: MIT
+
+==============================================================================
+CONTENTS						*instant-markdown-contents*
+
+Introduction		|instant-markdown-introduction|
+Requirements		|instant-markdown-requirements|
+Interface			|instant-markdown-interface|
+  Keymappings		|instant-markdown-keymappings|
+  Variables			|instant-markdown-variables|
+  Commands			|instant-markdown-commands|
+Changelog			|instant-markdown-changelog|
+
+
+==============================================================================
+INTRODUCTION						*instant-markdown-introduction* {{{
+
+This plugin provides a way to integrate with Firefox
+and preview current buffer's output in real-time in the browser.
+
+This plugin was inspired by https://github.com/suan/vim-instant-markdown (Google Chrome version)
+
+}}}
+==============================================================================
+REQUIREMENTS						*instant-markdown-requirements* {{{
+
+* Vimperator (Firefox add-on)
+  http://www.vimperator.org/vimperator
+  https://addons.mozilla.org/ja/firefox/addon/vimperator/
+* vimperator-plugin-httpdjs (Vimperator plugin)
+  https://github.com/teramako/vimperator-plugin-httpdjs
+  * To install the plugin, Please follow README.md instruction
+  * There is only Japanese version of README.md yet...
+* curl command
+  http://curl.haxx.se/
+
+}}}
+==============================================================================
+INTERFACE				*instant-markdown-interface* {{{
+------------------------------------------------------------------------------
+KEYMAPPINGS					*instant-markdown-keymappings* {{{
+
+The following mappings are |:map-local| in a buffer
+where |:InstantMarkdownStart| is executed.
+
+						*<Plug>(instant_markdown_update)*
+<Plug>(instant_markdown_update)
+	Update httpd.js page.
+
+Default
+---------
+You can change the following |:map-local| mappings
+by |User| instant-markdown-mapping event like this code: >
+	autocmd User instant-markdown-mapping call s:setup_mappings()
+	function! s:setup_mappings()
+		" Remove default <Plug>(instant_markdown_update) mappings.
+		nunmap <buffer> <C-l>
+
+		" Remove all buffer-local mappings.
+		nmapclear <buffer>
+	endfunction
+<
+<C-l>		<Plug>(instant_markdown_update)
+
+
+}}}
+------------------------------------------------------------------------------
+VARIABLES					*instant-markdown-variables* {{{
+
+			*g:instant_markdown_no_default_keymappings*
+g:instant_markdown_no_default_keymappings
+					(Default: 0)
+	If this was a true value,
+	this plugin does not set up default mappings
+	in |instant-markdown-keymappings|.
+
+g:instant_markdown_host		*g:instant_markdown_host*
+					(Default: "localhost")
+	Hostname where httpd.js is running.
+
+g:instant_markdown_port		*g:instant_markdown_port*
+					(Default: 8090)
+	Port number where httpd.js is running.
+
+g:instant_markdown_update_on_cursorhold		*g:instant_markdown_update_on_cursorhold*
+					(Default: 1)
+	If this was a true value,
+	Update httpd.js page on |CursorHold|, |CursorHoldI|.
+
+g:instant_markdown_update_on_cursormoved		*g:instant_markdown_update_on_cursormoved*
+					(Default: 0)
+	If this was a true value,
+	Update httpd.js page on |CursorMoved|, |CursorMovedI|.
+
+g:instant_markdown_update_on_bufwritepost		*g:instant_markdown_update_on_bufwritepost*
+					(Default: 1)
+	If this was a true value,
+	Update httpd.js page on |BufWritePost|.
+
+g:instant_markdown_updatetime		*g:instant_markdown_updatetime*
+					(Default: 100)
+	Local |'updatetime'| value within a buffer where
+	|:InstantMarkdownStart| is executed.
+
+}}}
+------------------------------------------------------------------------------
+COMMANDS					*instant-markdown-commands* {{{
+
+:InstantMarkdownStart			*:InstantMarkdownStart*
+	Open a page on Firefox to send a request
+	to httpd.js server.
+
+:InstantMarkdownStop			*:InstantMarkdownStop*
+	Close a page on Firefox which was opened
+	by |:InstantMarkdownStart|.
+
+}}}
+}}}
+==============================================================================
+CHANGELOG						*instant-markdown-changelog* {{{
+
+0.0.0:
+- Initial upload
+
+}}}
+==============================================================================
+vim:tw=78:fo=tcq2mM:ts=4:ft=help:norl:noet:fdm=marker:fen
